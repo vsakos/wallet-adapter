@@ -8,6 +8,7 @@ import { useSnackbar } from 'notistack';
 import type { FC, ReactNode } from 'react';
 import React, { useCallback, useMemo } from 'react';
 import { Theme } from './Theme';
+import { SolflareWalletAdapter } from '@solana/wallet-adapter-solflare';
 
 export const App: FC = () => {
     return (
@@ -37,6 +38,7 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
              * your users connect to will be loaded.
              */
             new FakeWalletAdapter(),
+            new SolflareWalletAdapter()
         ],
         []
     );

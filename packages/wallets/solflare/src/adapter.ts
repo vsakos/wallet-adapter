@@ -23,6 +23,9 @@ interface SolflareWindow extends Window {
         isSolflare?: boolean;
     };
     SolflareApp?: unknown;
+    ethereum?: {
+        isMetaMask?: boolean;
+    }
 }
 
 declare const window: SolflareWindow;
@@ -32,6 +35,7 @@ export interface SolflareWalletAdapterConfig {
 }
 
 export const SolflareWalletName = 'Solflare' as WalletName<'Solflare'>;
+export const SolflareMetamaskWalletName = 'Solflare + MetaMask' as WalletName<'Solflare'>;
 
 export class SolflareWalletAdapter extends BaseMessageSignerWalletAdapter {
     name = SolflareWalletName;
@@ -56,9 +60,13 @@ export class SolflareWalletAdapter extends BaseMessageSignerWalletAdapter {
         this._wallet = null;
         this._config = config;
 
+        if (window.ethereum?.isMetaMask) {
+            this.name = SolflareMetamaskWalletName;
+        }
+
         if (this._readyState !== WalletReadyState.Unsupported) {
             scopePollingDetectionStrategy(() => {
-                if (window.solflare?.isSolflare || window.SolflareApp) {
+                if (window.solflare?.isSolflare || window.SolflareApp || window.ethereum?.isMetaMask) {
                     this._readyState = WalletReadyState.Installed;
                     this.emit('readyStateChange', this._readyState);
                     return true;
